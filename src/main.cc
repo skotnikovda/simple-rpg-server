@@ -1,4 +1,9 @@
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+
+#include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
 
 #include "application/registry.h"
 #include "httpadapter/actions/accesstokengetter.h"
@@ -29,10 +34,21 @@
 #include "postgresadapter/shop.h"
 #include "postgresadapter/userrepository.h"
 
-const std::string postgres = "postgres://postgres:1234@172.17.0.2:5432";
+static std::string postgres = "";
 
 int main() {
   std::cout << "Hello, World!" << std::endl;
+  try {
+    auto logger = spdlog::basic_logger_mt("basic_logger", "logs/basic-log.txt");
+    spdlog::set_default_logger(logger);
+    spdlog::flush_on(spdlog::level::info);
+  } catch (const spdlog::spdlog_ex &ex) {
+    std::cout << "Log init failed: " << ex.what() << std::endl;
+    return 0;
+  }
+  std::ifstream file("config.json");
+  nlohmann::json config = nlohmann::json::parse(file);
+  postgres = config["postgres"];
   auto service = std::make_shared<application::Service>();
   std::cout << "Service created" << std::endl;
   auto user_repository =

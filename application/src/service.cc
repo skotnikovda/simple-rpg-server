@@ -1,5 +1,7 @@
 #include "application/service.h"
 
+#include <spdlog/spdlog.h>
+
 #include <iostream>
 
 #include "application/applicationerror.h"
@@ -10,28 +12,43 @@ void Service::ValidateAccessToken(
     const domain::user::AccessToken& token) const {
   auto user = (*user_repository)[token.id];
   if (user.secret() != token.secret) {
+    spdlog::error("Invalid access token Expected: {}, {} Actual: {}, {}",
+                  token.id.value(), token.secret.value(), user.id().value(),
+                  user.secret().value());
+    /*
     std::cout << "Invalid access token" << std::endl;
     std::cout << "Expected: " << user.id().value() << " "
               << user.secret().value() << std::endl;
-    std::cout << "Got: " << token.id.value() << " "
-              << token.secret.value() << std::endl;
+    std::cout << "Got: " << token.id.value() << " " << token.secret.value()
+              << std::endl;
+              */
     throw ApplicationError("Invalid access token");
   }
 }
 void Service::CreateUser(const domain::user::Credentials& credentials) {
+  spdlog::info("Creating user");
   auto factory = domain::user::Factory(*user_repository, *character_repository);
-  std::cout << "Creating user factory" << std::endl;
+  // std::cout << "Creating user factory" << std::endl;
   factory.CreateUser(credentials);
 }
 domain::user::AccessToken Service::GetAccessToken(
     const domain::user::Credentials& credentials) {
+  spdlog::info("Getting access token for user {} {}", credentials.alias.value(),
+               credentials.password.value());
   auto user = (*user_repository)[credentials];
   return user.access_token();
 }
-domain::Shop Service::GetShop() { return *shop_; }
-domain::Bestiary Service::GetBestiary() { return *bestiary_; }
+domain::Shop Service::GetShop() {
+  spdlog::info("Getting shop");
+  return *shop_;
+}
+domain::Bestiary Service::GetBestiary() {
+  spdlog::info("Getting bestiary");
+  return *bestiary_;
+}
 domain::Character Service::GetCharacter(
     const domain::user::AccessToken& token) {
+  spdlog::info("Getting character");
   ValidateAccessToken(token);
   auto character_id = domain::character::Id(token.id.value());
   auto character = (*character_repository)[character_id];
@@ -90,10 +107,10 @@ void Service::CreateFight(const application::FightRequest& request) {
 }
 domain::Fight Service::GetFight(const domain::user::AccessToken& token) {
   ValidateAccessToken(token);
-  std::cout << "Getting fight" << std::endl;
+  // std::cout << "Getting fight" << std::endl;
   auto character_id = domain::character::Id(token.id.value());
   auto fight = last_fight_storage_[character_id];
-  std::cout << "Got fight" << std::endl;
+  // std::cout << "Got fight" << std::endl;
   if (!fight) throw ApplicationError("No fight found");
   return *fight;
 }
@@ -105,7 +122,7 @@ domain::Guild Service::GetGuild(const domain::guild::Id& id) {
 }
 void Service::CreateGuild(const application::CreateGuildRequest& request) {
   ValidateAccessToken(request.token);
-  std::cout << "Creating guild" << std::endl;
+  // std::cout << "Creating guild" << std::endl;
   auto character_id = domain::character::Id(request.token.id.value());
   auto& character = (*character_repository)[character_id];
   auto leader_id = domain::guild::LeaderId(character.id().value());
@@ -113,9 +130,9 @@ void Service::CreateGuild(const application::CreateGuildRequest& request) {
   auto guild = domain::Guild(id, request.name, leader_id, {});
   guild.AddMember(character);
   character.JoinGuild(guild);
-  std::cout << "Adding guild" << std::endl;
+  // std::cout << "Adding guild" << std::endl;
   guild_repository->Add(guild);
-  std::cout << "Committing" << std::endl;
+  // std::cout << "Committing" << std::endl;
   character_repository->Commit();
 }
 void Service::JoinGuild(const application::JoinGuildRequest& request) {
