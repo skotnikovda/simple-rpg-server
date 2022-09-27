@@ -17,6 +17,7 @@ Response UserCreator::Post(const Request& request) {
     auto data = json::parse(request.body());
     auto credentials = Credentials::ToType(data);
     auto service = application::Registry::GetService();
+    std::cout << "Creating user" << std::endl;
     service->CreateUser(credentials);
     auto response = Response();
     response.set_code(ResponseStatus::kCreated);

@@ -10,5 +10,6 @@ class Gold {
   int value() const;
   Gold& operator+=(const Gold&);
   Gold& operator-=(const Gold&);
+  auto operator<=>(const Gold&) const = default;
 };
 }  // namespace domain

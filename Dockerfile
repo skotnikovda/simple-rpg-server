@@ -1,5 +1,7 @@
 FROM ubuntu:latest as env
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt update
 RUN apt install -y gcc g++ libboost-dev cmake
 RUN apt install -y libpq-dev postgresql-server-dev-all
@@ -12,6 +14,7 @@ COPY . /app
 WORKDIR /app/bin
 
 RUN cmake ..
+#RUN cmake --build . --target domain_test
 RUN cmake --build . --target server
 
 WORKDIR /app
@@ -21,4 +24,5 @@ USER sample
 
 EXPOSE 8080
 
+#ENTRYPOINT ./bin/domain/domain_test 
 ENTRYPOINT ./bin/server

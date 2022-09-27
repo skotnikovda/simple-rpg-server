@@ -9,8 +9,10 @@ add_library(
   include/public/application/lastfightstorage.h
   include/public/application/registry.h
   include/public/application/requests/buyrequest.h
+  include/public/application/requests/createguildrequest.h
   include/public/application/requests/equiprequest.h
   include/public/application/requests/fightrequest.h
+  include/public/application/requests/joinguildrequest.h
   include/public/application/requests/sellrequest.h
   include/public/application/requests/unequiprequest.h
   include/public/application/service.h

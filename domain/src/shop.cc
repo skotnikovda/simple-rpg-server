@@ -1,24 +1,21 @@
 #include "domain/shop.h"
 
+#include "domain/character.h"
+
 namespace domain {
-Shop::Shop() {
-  if (initialized_) return;
-  {
-    auto name = item::Name("Бронзовый шлем");
-    auto level = Level(1);
-    auto attack = Attack(0);
-    auto defense = Defense(5);
-    auto shape = item::Category(domain::item::Category::Helmet);
-    auto buy_price = item::BuyPrice(100);
-    auto sell_price = item::SellPrice(50);
-    auto item =
-        Item(name, level, attack, defense, shape, buy_price, sell_price);
-    items_.push_back(item);
-  }
-  initialized_ = true;
-}
 std::vector<Item> Shop::assortment() const { return items_; }
 Item Shop::operator[](const shop::ItemIndex& index) const {
   return items_[index.value()];
+}
+void Shop::AcceptPurchase(Character& character,
+                          const shop::ItemIndex& index) const {
+  auto item = items_[index.value()];
+  character.Take(item);
+  character.Give(item.buy_price());
+}
+void Shop::AcceptSale(Character& character,
+                      const inventory::ItemIndex& index) const {
+  auto item = character.Give(index);
+  character.Take(item.sell_price());
 }
 }  // namespace domain

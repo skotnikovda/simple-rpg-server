@@ -8,6 +8,8 @@ nlohmann::json Monster::ToJson(const domain::Monster& monster) {
   json["health"] = monster.health().value();
   json["attack"] = monster.attack().value();
   json["defense"] = monster.defense().value();
+  json["gold"] = monster.gold().value();
+  json["experience"] = monster.experience().value();
   return json;
 }
 }  // namespace httpadapter

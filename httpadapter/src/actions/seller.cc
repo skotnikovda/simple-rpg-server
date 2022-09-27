@@ -7,7 +7,7 @@
 #include "httpadapter/utility/requesthandler.h"
 
 namespace httpadapter {
-Target Seller::RequestTarget() { return Target("/sell"); }
+Target Seller::RequestTarget() { return Target("/api/sell"); }
 Response Seller::Post(const Request& request) {
   auto buyer = [](const Request& request) {
     using json = nlohmann::json;

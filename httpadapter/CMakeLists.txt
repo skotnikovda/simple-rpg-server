@@ -8,10 +8,17 @@ add_library(
   include/public/httpadapter/actions/accesstokengetter.h
   include/public/httpadapter/actions/bestiarygetter.h
   include/public/httpadapter/actions/buyer.h
+  include/public/httpadapter/actions/charactergetter.h
   include/public/httpadapter/actions/equiper.h
   include/public/httpadapter/actions/equipmentgetter.h
   include/public/httpadapter/actions/fightcreator.h
   include/public/httpadapter/actions/fightgetter.h
+  include/public/httpadapter/actions/guildcreator.h
+  include/public/httpadapter/actions/guildgetter.h
+  include/public/httpadapter/actions/guildjoiner.h
+  include/public/httpadapter/actions/guildleaver.h
+  include/public/httpadapter/actions/guildlistgetter.h
+  include/public/httpadapter/actions/healer.h
   include/public/httpadapter/actions/inventorygetter.h
   include/public/httpadapter/actions/seller.h
   include/public/httpadapter/actions/shopgetter.h
@@ -27,6 +34,8 @@ add_library(
   include/public/httpadapter/converters/accesstoken.h
   include/public/httpadapter/converters/bestiary.h
   include/public/httpadapter/converters/buyrequest.h
+  include/public/httpadapter/converters/character.h
+  include/public/httpadapter/converters/createguildrequest.h
   include/public/httpadapter/converters/credentials.h
   include/public/httpadapter/converters/equipment.h
   include/public/httpadapter/converters/equiprequest.h
@@ -34,9 +43,12 @@ add_library(
   include/public/httpadapter/converters/fightactor.h
   include/public/httpadapter/converters/fightevent.h
   include/public/httpadapter/converters/fightrequest.h
+  include/public/httpadapter/converters/guild.h
+  include/public/httpadapter/converters/guildlist.h
   include/public/httpadapter/converters/inventory.h
   include/public/httpadapter/converters/item.h
   include/public/httpadapter/converters/itemcategory.h
+  include/public/httpadapter/converters/joinguildrequest.h
   include/public/httpadapter/converters/monster.h
   include/public/httpadapter/converters/sellrequest.h
   include/public/httpadapter/converters/shop.h
@@ -57,10 +69,17 @@ add_library(
   src/actions/accesstokengetter.cc
   src/actions/bestiarygetter.cc
   src/actions/buyer.cc
+  src/actions/charactergetter.cc
   src/actions/equiper.cc
   src/actions/equipmentgetter.cc
   src/actions/fightcreator.cc
   src/actions/fightgetter.cc
+  src/actions/guildcreator.cc
+  src/actions/guildgetter.cc
+  src/actions/guildjoiner.cc
+  src/actions/guildleaver.cc
+  src/actions/guildlistgetter.cc
+  src/actions/healer.cc
   src/actions/inventorygetter.cc
   src/actions/seller.cc
   src/actions/shopgetter.cc
@@ -69,6 +88,8 @@ add_library(
   src/converters/accesstoken.cc
   src/converters/bestiary.cc
   src/converters/buyrequest.cc
+  src/converters/character.cc
+  src/converters/createguildrequest.cc
   src/converters/credentials.cc
   src/converters/equipment.cc
   src/converters/equiprequest.cc
@@ -76,9 +97,12 @@ add_library(
   src/converters/fightactor.cc
   src/converters/fightevent.cc
   src/converters/fightrequest.cc
+  src/converters/guild.cc
+  src/converters/guildlist.cc
   src/converters/inventory.cc
   src/converters/item.cc
   src/converters/itemcategory.cc
+  src/converters/joinguildrequest.cc
   src/converters/monster.cc
   src/converters/sellrequest.cc
   src/converters/shop.cc

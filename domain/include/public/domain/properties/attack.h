@@ -8,5 +8,6 @@ class Attack {
  public:
   Attack(int);
   int value() const;
+  auto operator<=>(const Attack&) const = default;
 };
 }  // namespace domain

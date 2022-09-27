@@ -5,7 +5,7 @@
 
 namespace httpadapter {
 application::UnequipRequest UnequipRequest::ToType(const nlohmann::json& data) {
-  auto access_token = AccessToken::ToType(data);
+  auto access_token = AccessToken::ToType(data["access_token"]);
   auto category = ItemCategory::ToType(data["category"]);
   return application::UnequipRequest{access_token, category};
 }

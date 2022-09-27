@@ -1,42 +1,67 @@
 #include "postgresadapter/inventoryrepository.h"
 
+#include <iostream>
 #include <pqxx/pqxx>
+
+#include "itemconverter.h"
 
 namespace postgresadapter {
 InventoryRepository::InventoryRepository(const std::string& connection_string)
     : connection_string_(connection_string) {}
-domain::game::Inventory InventoryRepository::GetByOwnerId(int owner_id) {
+void InventoryRepository::Add(const domain::Inventory& inventory) {
+  std::cout << "InventoryRepository::Add" << std::endl;
   auto connection = pqxx::connection(connection_string_);
   auto work = pqxx::work(connection);
-  auto row = work.exec_params1(
-      "SELECT id, item_limit FROM inventory WHERE owner_id = $1",
-      pqxx::vector<pqxx::param>(1, pqxx::param(owner_id)));
-  auto id = row[0].as<int>();
-  auto item_limit = row[1].as<int>();
-  auto result = work.exec_params(
-      "SELECT items.id, item_types.id, image, name, level, attack, defense, "
-      "shape, buy_price, sell_price FROM items JOIN item_types on item.type_id "
-      "= item_types.id WHERE owner_id = $1",
-      owner_id);
-  std::vector<domain::game::Item> items;
-  for (const auto& row : result) {
-    auto item_id = row[0].as<int>();
-    auto type_id = row[1].as<int>();
-    auto image = row[2].as<std::string>();
-    auto name = row[3].as<std::string>();
-    auto level = row[4].as<int>();
-    auto attack = row[5].as<int>();
-    auto defense = row[6].as<int>();
-    auto shape = row[7].as<std::string>();
-    auto buy_price = row[8].as<int>();
-    auto sell_price = row[9].as<int>();
-    auto item_type =
-        domain::game::ItemType(type_id, image, name, level, attack, defense,
-                               shape, buy_price, sell_price);
-    auto item = domain::game::Item(item_id, item_type);
+  auto id = inventory.id().value();
+  auto size = inventory.size().value();
+  work.exec_params0(
+      "INSERT INTO inventories (character_id, size, items) VALUES ($1, $2, "
+      "'{}');",
+      id, size);
+  work.commit();
+  std::cout << "InventoryRepository::Add done" << std::endl;
+}
+domain::Inventory& InventoryRepository::operator[](
+    const domain::character::Id& id) {
+  auto connection = pqxx::connection(connection_string_);
+  auto work = pqxx::work(connection);
+  auto pg_inventory = work.exec_params1(
+      "SELECT * FROM inventories WHERE character_id = $1;", id.value());
+  auto size = pg_inventory["size"].as<int>();
+  auto pg_item_ids = pg_inventory["items"].as<std::string>();
+  auto pg_items = work.exec_params(
+      "SELECT items.* FROM (SELECT row_number() OVER () AS row_id, ids AS "
+      "item_id FROM UNNEST($1::INTEGER[]) AS ids) AS inv JOIN items ON "
+      "item_id=items.id ORDER BY row_id;",
+      pg_item_ids);
+  std::vector<domain::Item> items;
+  for (const auto& pg_item : pg_items) {
+    auto item = ItemConverter::Convert(pg_item);
     items.push_back(item);
   }
-  auto inventory = domain::game::Inventory(id, item_limit, items);
-  return inventory;
+  auto inventory = domain::Inventory(id, size, items);
+  inventories_.push_back(inventory);
+  return inventories_.back();
+}
+void InventoryRepository::Commit() {
+  std::cout << "InventoryRepository::Commit" << std::endl;
+  auto connection = pqxx::connection(connection_string_);
+  auto work = pqxx::work(connection);
+  for (const auto& inventory : inventories_) {
+    auto id = inventory.id().value();
+    auto size = inventory.size().value();
+    auto item_ids_str = std::string("{");
+    for (const auto& item : inventory.items()) {
+      item_ids_str += std::to_string(item.id().value()) + ",";
+    }
+    if (inventory.items().size() > 0) item_ids_str.pop_back();
+    item_ids_str += "}";
+    std::cout << "item_ids_str " << item_ids_str << std::endl;
+    work.exec_params0(
+        "UPDATE inventories SET size = $1, items = $2 WHERE character_id = $3;",
+        size, item_ids_str, id);
+  }
+  inventories_.clear();
+  work.commit();
 }
 }  // namespace postgresadapter

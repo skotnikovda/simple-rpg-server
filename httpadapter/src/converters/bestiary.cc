@@ -5,9 +5,9 @@
 namespace httpadapter {
 nlohmann::json Bestiary::ToJson(const domain::Bestiary& bestiary) {
   nlohmann::json json;
-  json["enemies"] = nlohmann::json::array();
+  json["monsters"] = nlohmann::json::array();
   for (const auto& monster : bestiary.species()) {
-    json.push_back(Monster::ToJson(monster));
+    json["monsters"].push_back(Monster::ToJson(monster));
   }
   return json;
 }

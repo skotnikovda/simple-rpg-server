@@ -7,7 +7,7 @@
 #include "httpadapter/utility/requesthandler.h"
 
 namespace httpadapter {
-Target Unequiper::RequestTarget() { return Target("/unequip"); }
+Target Unequiper::RequestTarget() { return Target("/api/unequip"); }
 Response Unequiper::Post(const Request& request) {
   auto unequiper = [](const Request& request) {
     using json = nlohmann::json;

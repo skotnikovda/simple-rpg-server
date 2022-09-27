@@ -10,6 +10,7 @@ class Health {
  public:
   Health(int);
   int value() const;
+  Health& operator+=(const Health&);
   Health& operator-=(const fight::Damage&);
 };
 }  // namespace domain

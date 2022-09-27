@@ -7,7 +7,7 @@
 #include "httpadapter/utility/requesthandler.h"
 
 namespace httpadapter {
-Target Equiper::RequestTarget() { return Target("/equip"); }
+Target Equiper::RequestTarget() { return Target("/api/equip"); }
 Response Equiper::Post(const Request& request) {
   auto equiper = [](const Request& request) {
     using json = nlohmann::json;

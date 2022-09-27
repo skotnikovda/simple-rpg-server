@@ -8,5 +8,7 @@ class Experience {
  public:
   Experience(int);
   int value() const;
+  Experience& operator+=(const Experience&);
+  Experience& operator-=(const Experience&);
 };
 }  // namespace domain

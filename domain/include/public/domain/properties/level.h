@@ -8,5 +8,6 @@ class Level {
  public:
   Level(int);
   int value() const;
+  auto operator<=>(const Level&) const = default;
 };
 }  // namespace domain

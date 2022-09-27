@@ -1,5 +1,7 @@
 #include "httpadapter/converters/itemcategory.h"
 
+#include <iostream>
+
 namespace httpadapter {
 std::map<domain::item::Category, std::string> ItemCategory::type_map_ = {
     {domain::item::Category::Helmet, "helmet"},

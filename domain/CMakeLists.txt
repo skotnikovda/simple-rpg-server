@@ -23,6 +23,11 @@ add_library(
   include/public/domain/fight/damage.h
   include/public/domain/fight/event.h
   include/public/domain/gold.h
+  include/public/domain/guild.h
+  include/public/domain/guild/id.h
+  include/public/domain/guild/leaderid.h
+  include/public/domain/guild/member.h
+  include/public/domain/guild/name.h
   include/public/domain/inventory.h
   include/public/domain/inventory/itemcount.h
   include/public/domain/inventory/itemindex.h
@@ -30,9 +35,11 @@ add_library(
   include/public/domain/item.h
   include/public/domain/item/buyprice.h
   include/public/domain/item/category.h
+  include/public/domain/item/id.h
   include/public/domain/item/name.h
   include/public/domain/item/sellprice.h
   include/public/domain/monster.h
+  include/public/domain/monster/id.h
   include/public/domain/monster/name.h
   include/public/domain/properties/attack.h
   include/public/domain/properties/defense.h
@@ -62,13 +69,20 @@ add_library(
   src/fight/damage.cc
   src/fight/event.cc
   src/gold.cc
+  src/guild.cc
+  src/guild/id.cc
+  src/guild/leaderid.cc
+  src/guild/member.cc
+  src/guild/name.cc
   src/inventory.cc
   src/inventory/itemcount.cc
   src/inventory/itemindex.cc
   src/inventory/size.cc
   src/item.cc
+  src/item/id.cc
   src/item/name.cc
   src/monster.cc
+  src/monster/id.cc
   src/monster/name.cc
   src/properties/attack.cc
   src/properties/defense.cc
@@ -84,3 +98,10 @@ add_library(
   src/user/secret.cc)
 
 target_include_directories(${PROJECT_NAME} PUBLIC include/public)
+
+add_subdirectory(lib/googletest)
+add_executable(${PROJECT_NAME}_test test/charactertest.cc)
+
+target_include_directories(${PROJECT_NAME}_test PUBLIC include/public)
+target_link_libraries(${PROJECT_NAME}_test PUBLIC ${PROJECT_NAME} gtest gmock
+                                                  gtest_main)

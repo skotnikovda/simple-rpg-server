@@ -7,7 +7,7 @@
 #include "httpadapter/utility/requesthandler.h"
 
 namespace httpadapter {
-Target FightCreator::RequestTarget() { return Target("/createfight"); }
+Target FightCreator::RequestTarget() { return Target("/api/createfight"); }
 Response FightCreator::Post(const Request& request) {
   auto creator = [](const Request& request) {
     using json = nlohmann::json;

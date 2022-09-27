@@ -1,19 +1,22 @@
 #pragma once
 
-#include "domain/access/userrepository.h"
+#include <vector>
+
+#include "domain/user/repository.h"
 
 namespace postgresadapter {
-class UserRepository : public domain::access::UserRepository {
+class UserRepository : public domain::user::Repository {
  private:
   std::string connection_string_;
+  std::vector<domain::User> users_;
 
  public:
-  UserRepository(const std::string& connection_string);
-  int MinimalFreeId() const override;
-  bool IsUsernameUnique(const std::string&) override;
-  void Add(const domain::access::User&) override;
-  domain::access::User GetByCredentials(
-      const domain::access::Credentials&) override;
-  domain::access::User GetById(int) override;
+  UserRepository(const std::string&);
+  domain::user::Id MinimalFreeId() const override;
+  bool IsAliasUnique(const domain::user::Alias&) const override;
+  void Add(const domain::User&) override;
+  domain::User& operator[](const domain::user::Id&) override;
+  domain::User& operator[](const domain::user::Credentials&) override;
+  void Commit() override;
 };
 }  // namespace postgresadapter

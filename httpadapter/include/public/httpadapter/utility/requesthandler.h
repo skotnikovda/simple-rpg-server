@@ -15,16 +15,17 @@ class RequestHandler {
   RequestHandler(const Handler&);
   template <class T>
   RequestHandler& handleError() {
-    auto handler = [&](const Request& request) {
+    auto old_handler = handler_;
+    auto new_handler = [=](const Request& request) {
       auto response = Response();
       try {
-        response = handler_(request);
+        response = old_handler(request);
       } catch (const T& e) {
         response = error_handlers_[typeid(T)](request);
       }
       return response;
     };
-    handler_ = handler;
+    handler_ = new_handler;
     return *this;
   }
   Response process(const Request&);

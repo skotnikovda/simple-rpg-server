@@ -5,9 +5,10 @@
 #include "domain/domainerror.h"
 
 namespace domain {
-Inventory::Inventory(const inventory::Size& size,
+Inventory::Inventory(const character::Id& id, const inventory::Size& size,
                      const std::vector<Item>& items)
-    : size_(size), items_(items) {}
+    : id_(id), size_(size), items_(items) {}
+character::Id Inventory::id() const { return id_; }
 inventory::Size Inventory::size() const { return size_; }
 const std::vector<Item>& Inventory::items() const { return items_; }
 const Item& Inventory::item(const inventory::ItemIndex& index) const {

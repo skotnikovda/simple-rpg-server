@@ -3,6 +3,10 @@
 namespace domain {
 Health::Health(int value) : value_(value) {}
 int Health::value() const { return value_; }
+Health& Health::operator+=(const Health& healing) {
+  value_ += healing.value();
+  return *this;
+}
 Health& Health::operator-=(const fight::Damage& damage) {
   value_ -= damage.value();
   if (value_ < 0) value_ = 0;

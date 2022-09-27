@@ -1,17 +1,19 @@
 #include "domain/monster.h"
 
 namespace domain {
-Monster::Monster(const monster::Name& name, const Level& level,
-                 const Health& health, const Attack& attack,
+Monster::Monster(const monster::Id& id, const monster::Name& name,
+                 const Level& level, const Health& health, const Attack& attack,
                  const Defense& defense, const Experience& experience,
                  const Gold& gold)
-    : name_(name),
+    : id_(id),
+      name_(name),
       level_(level),
       health_(health),
       attack_(attack),
       defense_(defense),
       experience_(experience),
       gold_(gold) {}
+monster::Id Monster::id() const { return id_; }
 monster::Name Monster::name() const { return name_; }
 Level Monster::level() const { return level_; }
 Health Monster::health() const { return health_; }

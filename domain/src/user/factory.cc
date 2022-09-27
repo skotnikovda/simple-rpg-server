@@ -1,5 +1,7 @@
 #include "domain/user/factory.h"
 
+#include <iostream>
+
 #include "domain/character/factory.h"
 #include "domain/errors/aliasexistserror.h"
 
@@ -12,6 +14,7 @@ void Factory::CreateUser(const Credentials& credentials) {
   auto id = repository_.MinimalFreeId();
   auto alias = credentials.alias;
   if (!repository_.IsAliasUnique(alias)) throw AliasExistsError();
+  std::cout << "Creating user " << credentials.alias.value() << std::endl;
   auto password = credentials.password;
   auto secret = std::string(10, '0');
   for (auto& ch : secret) ch += std::rand() % 10;

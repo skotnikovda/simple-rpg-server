@@ -2,18 +2,20 @@
 
 #include <vector>
 
+#include "inventory/itemindex.h"
 #include "item.h"
 #include "shop/itemindex.h"
 
 namespace domain {
+class Character;
 class Shop {
- private:
+ protected:
   static inline std::vector<Item> items_ = {};
-  static inline bool initialized_ = false;
 
  public:
-  Shop();
   std::vector<Item> assortment() const;
   Item operator[](const shop::ItemIndex&) const;
+  void AcceptPurchase(Character&, const shop::ItemIndex&) const;
+  void AcceptSale(Character&, const inventory::ItemIndex&) const;
 };
 }  // namespace domain

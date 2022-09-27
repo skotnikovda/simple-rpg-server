@@ -1,14 +1,20 @@
 #pragma once
 
-#include "domain/game/inventoryrepository.h"
+#include <string>
+#include <vector>
+
+#include "domain/inventory.h"
 
 namespace postgresadapter {
-class InventoryRepository : public domain::game::InventoryRepository {
+class InventoryRepository {
  private:
+  std::vector<domain::Inventory> inventories_;
   std::string connection_string_;
 
  public:
   InventoryRepository(const std::string& connection_string);
-  Inventory GetByOwnerId(int owner_id) override;
+  void Add(const domain::Inventory&);
+  domain::Inventory& operator[](const domain::character::Id&);
+  void Commit();
 };
 }  // namespace postgresadapter

@@ -3,10 +3,15 @@
 #include "domain/domainerror.h"
 
 namespace domain {
-Equipment::Equipment(std::map<item::Category, std::optional<Item>> items)
-    : items_{items} {}
+Equipment::Equipment(const character::Id& id,
+                     const std::map<item::Category, std::optional<Item>>& items)
+    : id_(id), items_{items} {}
+character::Id Equipment::id() const { return id_; }
 std::optional<Item> Equipment::item(const item::Category& category) const {
-  return items_.at(category);
+  if (items_.contains(category)) {
+    return items_.at(category);
+  }
+  return std::nullopt;
 }
 void Equipment::Equip(const Item& item) {
   if (items_[item.category()].has_value()) {
